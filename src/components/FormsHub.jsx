@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { Building2, GraduationCap, Calculator, Send } from "lucide-react";
+import { Building2, GraduationCap, Calculator, Send, Users } from "lucide-react";
 
 function TabButton({ active, onClick, icon: Icon, children }) {
   return (
@@ -19,23 +19,27 @@ export default function FormsHub() {
 
   return (
     <section id="inscription" className="relative">
-      <div className="mx-auto max-w-7xl px-6 py-12">
+      <div className="w-full max-w-6xl rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-2xl backdrop-blur-xl">
         <div className="mb-6 flex flex-wrap gap-3">
           <TabButton active={tab === "inscription"} onClick={() => setTab("inscription")} icon={Building2}>
             Inscription Entreprise
           </TabButton>
-          <TabButton active={tab === "matching"} onClick={() => setTab("matching")} icon={GraduationCap}>
-            Matching Apprenti-Entreprise
+          <TabButton active={tab === "matching"} onClick={() => setTab("matching")} icon={Users}>
+            Matching Apprenti
           </TabButton>
           <TabButton active={tab === "simulateur"} onClick={() => setTab("simulateur")} icon={Calculator}>
-            Simulateur Budget OPCO
+            Simulateur OPCO
+          </TabButton>
+          <TabButton active={tab === "catalogue"} onClick={() => setTab("catalogue")} icon={GraduationCap}>
+            Catalogue 3 colonnes
           </TabButton>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-white shadow-xl backdrop-blur">
+        <div className="rounded-xl border border-white/10 bg-white/5 p-5">
           {tab === "inscription" && <CompanySignup />}
           {tab === "matching" && <ApprenticeMatching />}
           {tab === "simulateur" && <BudgetSimulator />}
+          {tab === "catalogue" && <CompactCatalog />}
         </div>
       </div>
     </section>
@@ -83,7 +87,7 @@ function CompanySignup() {
   return (
     <div>
       <h3 className="text-xl font-bold">Inscription Entreprise</h3>
-      <p className="mb-6 mt-1 text-white/80">Profitez des aides à la formation pour vos salariés.</p>
+      <p className="mb-6 mt-1 text-white/80">Des parcours efficaces pour jeunes, reconversions 50+ et demandeurs d'emploi – en phase avec France Travail 2026.</p>
       <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="societe">Nom de l'entreprise</Label>
@@ -131,7 +135,7 @@ function ApprenticeMatching() {
   return (
     <div>
       <h3 className="text-xl font-bold">Matching Apprenti-Entreprise</h3>
-      <p className="mb-6 mt-1 text-white/80">Trouvez l'entreprise ou l'apprenti idéal selon votre objectif.</p>
+      <p className="mb-6 mt-1 text-white/80">Trouvez le meilleur match en fonction du secteur, du niveau et des objectifs.</p>
       <form onSubmit={onSubmit} className="grid grid-cols-1 gap-4 md:grid-cols-2">
         <div className="flex flex-col gap-2">
           <Label htmlFor="nomApprenti">Nom de l'apprenti</Label>
@@ -140,14 +144,6 @@ function ApprenticeMatching() {
         <div className="flex flex-col gap-2">
           <Label htmlFor="emailApprenti">Email de l'apprenti</Label>
           <Input id="emailApprenti" type="email" name="emailApprenti" placeholder="lina@email.fr" />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="entrepriseRecherchee">Entreprise recherchée (optionnel)</Label>
-          <Input id="entrepriseRecherchee" name="entrepriseRecherchee" placeholder="Nom de l'entreprise" />
-        </div>
-        <div className="flex flex-col gap-2">
-          <Label htmlFor="emailEntreprise">Email entreprise (optionnel)</Label>
-          <Input id="emailEntreprise" type="email" name="emailEntreprise" placeholder="contact@societe.fr" />
         </div>
         <div className="flex flex-col gap-2">
           <Label htmlFor="secteurVise">Secteur visé</Label>
@@ -185,12 +181,12 @@ function BudgetSimulator() {
   const result = useMemo(() => {
     const masseNum = Number(masse) || 0;
     const nbNum = Number(nb) || 0;
-    const opcoBase = masseNum * 0.01; // Hypothèse: 1% de la masse salariale
-    const supportParSalarie = nbNum * 100; // Hypothèse d'aide unitaire
+    const opcoBase = masseNum * 0.01; // hypothèse: 1% de masse salariale
+    const supportParSalarie = nbNum * 100; // hypothèse d'aide unitaire
     let total = opcoBase + supportParSalarie;
     let bonusFNE = 0;
     if (fne) {
-      bonusFNE = total * 0.5; // Hypothèse FNE: +50% quand éligible
+      bonusFNE = total * 0.5; // +50% si FNE éligible
       total += bonusFNE;
     }
     return { opcoBase, supportParSalarie, bonusFNE, total };
@@ -238,6 +234,53 @@ function Stat({ title, value, highlight }) {
     <div className={`rounded-xl border p-4 ${highlight ? "border-sky-400/30 bg-sky-400/10" : "border-white/10 bg-white/5"}`}>
       <div className="text-sm text-white/70">{title}</div>
       <div className="mt-1 text-2xl font-bold text-white">{value}</div>
+    </div>
+  );
+}
+
+function CompactCatalogCard({ c }) {
+  return (
+    <article className="group rounded-xl border border-white/10 bg-white/5 p-4 text-white shadow backdrop-blur transition hover:border-sky-400/30 hover:bg-sky-400/10">
+      <div className="flex items-center justify-between">
+        <h4 className="text-base font-semibold">{c.title}</h4>
+        <span className="rounded-full bg-white/10 px-2 py-0.5 text-xs text-white/80">{c.level}</span>
+      </div>
+      <p className="mt-2 line-clamp-2 text-xs text-white/80">{c.desc}</p>
+      <div className="mt-3 flex items-center gap-3 text-xs text-white/70">
+        <span className="rounded-md border border-white/10 px-2 py-1">{c.duration}</span>
+      </div>
+      <button className="mt-3 inline-flex w-full items-center justify-center rounded-lg bg-sky-600 px-3 py-2 text-sm font-semibold text-white hover:bg-sky-500">
+        Demander cette formation
+      </button>
+    </article>
+  );
+}
+
+function CompactCatalog() {
+  // Sélection compacte pour tenir sans scroll global (3 colonnes x 3 lignes)
+  const items = [
+    { title: "Développeur Web", duration: "12 mois", level: "Bac+2", desc: "Créez des sites modernes: HTML, CSS, JS, React." },
+    { title: "Data Analyst", duration: "8 mois", level: "Bac+3/4", desc: "Python, SQL, dataviz et storytelling data." },
+    { title: "Designer UX/UI", duration: "10 mois", level: "Bac+3/4", desc: "Expériences utilisateur, design systems." },
+    { title: "SST - Sécurité au Travail", duration: "2 jours", level: "Initial", desc: "Prévention, gestes d'urgence, conformité." },
+    { title: "Habilitation Électrique", duration: "3 jours", level: "Initial", desc: "Travaux proches d'installations électriques." },
+    { title: "HACCP", duration: "14h", level: "Initial", desc: "Hygiène alimentaire restauration commerciale." },
+    { title: "Assistant RH", duration: "12 mois", level: "Bac+2", desc: "Admin du personnel, paie, recrutement." },
+    { title: "Conseiller Insertion Pro", duration: "8 mois", level: "Bac+2", desc: "Accompagnement demandeurs d'emploi." },
+    { title: "Technicien Helpdesk", duration: "8 mois", level: "Bac+2", desc: "Support informatique N1/N2 et ITSM." },
+  ];
+
+  return (
+    <div id="catalogue">
+      <div className="mb-4 flex items-center gap-2">
+        <GraduationCap className="h-5 w-5 text-sky-300" />
+        <h3 className="text-xl font-bold">Catalogue Sélection (3 colonnes)</h3>
+      </div>
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {items.map((c) => (
+          <CompactCatalogCard key={c.title} c={c} />
+        ))}
+      </div>
     </div>
   );
 }

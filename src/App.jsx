@@ -1,29 +1,34 @@
 import Hero from "./components/Hero";
 import Parrainage from "./components/Parrainage";
 import FormsHub from "./components/FormsHub";
-import Catalog from "./components/Catalog";
 import { MessageCircle } from "lucide-react";
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 text-white antialiased">
+    <div className="relative min-h-screen w-full bg-slate-950 text-white antialiased overflow-hidden">
+      {/* 3D Hero background fills the screen */}
       <Hero />
-      <Parrainage />
-      <FormsHub />
-      <Catalog />
 
-      <footer className="border-t border-white/10">
-        <div className="mx-auto max-w-7xl px-6 py-10">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-lg font-semibold">Formation1.fr – Qualiopi</h3>
-            <p className="text-white/80">Organisme de formation professionnelle certifié Qualiopi</p>
-            <p className="text-white/70">Contact : <a href="mailto:info@formation1.fr" className="underline decoration-sky-400/50 underline-offset-4">info@formation1.fr</a></p>
-            <p className="text-white/60">Formation professionnelle • Financement OPCO • Aides FNE-Formation • Apprentissage • CPF</p>
-            <div className="mt-4 text-xs text-white/50">© {new Date().getFullYear()} Formation1.fr • Made in Bolt</div>
-          </div>
+      {/* Central responsive panel (no page scroll) */}
+      <div className="pointer-events-none absolute inset-0 flex items-center justify-center px-4">
+        <div className="pointer-events-auto w-full max-w-6xl">
+          <FormsHub />
         </div>
-      </footer>
+      </div>
 
+      {/* Floating Parrainage badge at bottom center */}
+      <div className="pointer-events-none absolute bottom-6 left-0 right-0 flex justify-center px-6">
+        <div className="pointer-events-auto w-full max-w-5xl">
+          <Parrainage />
+        </div>
+      </div>
+
+      {/* Minimal footer inside viewport to avoid scroll */}
+      <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center pb-3 text-xs text-white/50">
+        © {new Date().getFullYear()} Formation1.fr – Organisme certifié Qualiopi
+      </div>
+
+      {/* Floating WhatsApp action */}
       <a
         href="https://wa.me/33600000000"
         target="_blank"
